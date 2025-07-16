@@ -7,7 +7,7 @@ const app = express();
 const port = config.port;
 app.use(express.json());
 app.use(cookieParser());
-app.use(router);
+app.use("/api", router);
 app.use(errorHandler);
 app.listen(port, (error) => {
   if (error) {
