@@ -1,6 +1,7 @@
 import express from "express";
+import config from "./config/config";
 const app = express();
-const port = process.env.PORT || 3000;
+const port = config.port;
 app.listen(port, (error) => {
   if (error) {
     console.error(error);
