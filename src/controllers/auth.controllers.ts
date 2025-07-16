@@ -27,7 +27,16 @@ export const login = asyncHandler(
       password,
     );
     if (!token) next(new Error());
-
-    res.status(200).json(token);
+    res.cookie("accessToken", token?.accessToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      expires: new Date(Date.now() + 360_000),
+    });
+    res.status(200).json({ message: "success" });
   },
 );
+export const logout = asyncHandler(async (_req: Request, res: Response) => {
+  res.clearCookie("accessToken");
+  res.json({ message: "logged out" });
+});
