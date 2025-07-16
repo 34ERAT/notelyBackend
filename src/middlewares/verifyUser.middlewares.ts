@@ -20,6 +20,5 @@ export function verifyUser(req: Request, res: Response, next: NextFunction) {
     return;
   }
   req.userId = (decode as Payload).id;
-  console.log(req.userId);
   next();
 }
