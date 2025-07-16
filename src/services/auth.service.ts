@@ -23,3 +23,18 @@ export async function loginUser(userNameOrEmail: string, password: string) {
   });
   return { accessToken };
 }
+export async function resetPassword(
+  userId: string,
+  newPassword: string,
+  oldPassword: string,
+) {
+  const user = await dbConnection.user.findUnique({ where: { id: userId } });
+  const isValid = await bcrypt.compare(oldPassword, user?.password as string);
+  if (!isValid) return;
+  newPassword = await bcrypt.hash(newPassword, 10);
+  const newPass = await dbConnection.user.update({
+    where: { id: userId },
+    data: { password: newPassword },
+  });
+  return newPass;
+}

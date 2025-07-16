@@ -18,3 +18,17 @@ export const loginRequest = z.object({
   email: z.email().optional(),
   password: z.string().min(2),
 });
+export const resetPasswordRequest = z
+  .object({
+    oldPassword: z.string().min(2),
+    password: z.string().min(2),
+    confirmPassword: z.string().min(2),
+  })
+  .refine(
+    ({ password: newpass, confirmPassword: confirm }) => newpass === confirm,
+    {
+      message: "newpassword and confirmPassword should be equal",
+      path: ["confirmPassword"],
+    },
+  );
+export const userIdRequest = z.uuid();

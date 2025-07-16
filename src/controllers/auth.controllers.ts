@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
-import { loginRequest, registerRequest } from "../validations";
-import { createUser, loginUser } from "../services";
+import {
+  loginRequest,
+  registerRequest,
+  resetPasswordRequest,
+  userIdRequest,
+} from "../validations";
+import { createUser, loginUser, resetPassword } from "../services";
 import { User } from "@prisma/client";
 
 export const register = asyncHandler(
@@ -40,3 +45,15 @@ export const logout = asyncHandler(async (_req: Request, res: Response) => {
   res.clearCookie("accessToken");
   res.json({ message: "logged out" });
 });
+
+export const patchPassword = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { password, oldPassword } = await resetPasswordRequest.parseAsync(
+      req.body,
+    );
+    const userId = await userIdRequest.parseAsync(req.userId);
+    const newpass = await resetPassword(userId, oldPassword, password);
+    if (!newpass) next(new Error());
+    res.status(200).json({ message: "password reset succefull" });
+  },
+);
