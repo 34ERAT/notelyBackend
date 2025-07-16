@@ -1,7 +1,6 @@
-import { Prisma } from "@prisma/client";
 import z from "zod";
 
-export const registerUser = z
+export const registerRequest = z
   .object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
@@ -14,3 +13,8 @@ export const registerUser = z
     message: "password and confirmPassword should be equal",
     path: ["confirmPassword"],
   });
+export const loginRequest = z.object({
+  userName: z.string().min(2).optional(),
+  email: z.email().optional(),
+  password: z.string().min(2),
+});
