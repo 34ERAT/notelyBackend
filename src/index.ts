@@ -1,7 +1,14 @@
 import express from "express";
 import config from "./config/config";
+import router from "./routes";
+import cookieParser from "cookie-parser";
+import errorHandler from "./middlewares/errorHandler";
 const app = express();
 const port = config.port;
+app.use(express.json());
+app.use(cookieParser());
+app.use(router);
+app.use(errorHandler);
 app.listen(port, (error) => {
   if (error) {
     console.error(error);
