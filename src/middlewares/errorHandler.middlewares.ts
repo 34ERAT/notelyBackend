@@ -1,4 +1,7 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, Response } from "express";
+import { JsonWebTokenError } from "jsonwebtoken";
+import z, { ZodError } from "zod";
 
 export default function (
   error: Error,
@@ -6,11 +9,32 @@ export default function (
   res: Response,
   _next: NextFunction,
 ) {
-  //TODO: handle zode errors
+  if (error instanceof ZodError) {
+    const pretryError = z.prettifyError(error);
+    res.status(400).json({ message: pretryError });
+    return;
+  }
   //
-  //TODO: handle prisma errors
-  //
-  //TODO: handle jwt errors
+  if (error instanceof PrismaClientKnownRequestError) {
+    switch (error.code) {
+      case "P2001":
+        res.status(404).json({ message: "record not exist" });
+        break;
+      case "P2002":
+        res.status(400).json({
+          message: ` ${error.meta?.target as string} record already exist`,
+        });
+        break;
+      default:
+        res.status(400).json({ message: "something is wrong with your data " });
+        break;
+    }
+    return;
+  }
+  if (Error instanceof JsonWebTokenError) {
+    res.status(409).json({ message: "invalid token or expried login again" });
+    return;
+  }
   console.log(error);
   res.status(500).json({
     message: "something went wrong",

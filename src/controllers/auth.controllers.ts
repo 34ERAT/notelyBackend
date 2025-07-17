@@ -35,7 +35,7 @@ export const login = asyncHandler(
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      expires: new Date(Date.now() + 360_000),
+      expires: new Date(Date.now() + 1000 * 60 * 60),
     });
     res.status(200).json({ message: "success" });
   },
