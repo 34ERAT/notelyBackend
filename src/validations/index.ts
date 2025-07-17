@@ -1,3 +1,4 @@
+import e from "express";
 import z from "zod";
 
 export const registerRequest = z
@@ -39,4 +40,11 @@ export const noteRequest = z.object({
   title: z.string(),
   synopsis: z.string(),
   content: z.string(),
+});
+export const profileRequest = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.email(),
+  username: z.string(),
+  avatar: z.string(),
 });
