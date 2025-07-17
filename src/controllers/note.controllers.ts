@@ -52,6 +52,7 @@ export const findNote = asyncHandler(
         new PrismaClientKnownRequestError("note was not found", {
           code: "P2001",
           clientVersion: "N\/A",
+          meta: { target: ["id"] },
         }),
       );
       return;

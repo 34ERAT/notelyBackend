@@ -18,7 +18,10 @@ export default function (
   if (error instanceof PrismaClientKnownRequestError) {
     switch (error.code) {
       case "P2001":
-        res.status(404).json({ message: "record not exist" });
+        res
+          .status(404)
+          .json({ message: "The specified Record does not exist" });
+        console.error(error);
         break;
       case "P2002":
         res.status(400).json({

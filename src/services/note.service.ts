@@ -18,6 +18,7 @@ export async function getNotesByUserId(userId: string, deleted: boolean) {
 export async function getNote(id: string, userId: string) {
   const note = await dbConnection.note.findUnique({
     where: { id, AND: { userId, isDelete: false } },
+    omit: { isDelete: true, userId: true },
   });
   return note;
 }
@@ -40,6 +41,7 @@ export async function restoreNoteById(id: string, userId: string) {
       AND: { userId, isDelete: true },
     },
     data: { isDelete: false },
+    omit: { isDelete: true, userId: true },
   });
   return note;
 }
