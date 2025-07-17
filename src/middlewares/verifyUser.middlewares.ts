@@ -6,9 +6,9 @@ import { validatedId } from "../validations";
 
 export const verifyUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { accessToken } = req.cookies;
+    const accessToken = req.headers["authorization"]?.split(" ")[1];
     if (!accessToken) {
-      res.status(404).json({ message: "no cookies found" });
+      res.status(404).json({ message: "no token found " });
       return;
     }
     type Payload = {
@@ -17,7 +17,7 @@ export const verifyUser = asyncHandler(
       iat: number;
       exp: number;
     };
-    const decode = verify(accessToken, config.jwtsecret);
+    const decode = verify(accessToken, config.jwtSecret);
     if (!decode) {
       res.status(404).json({ message: "no token found or invalid_type" });
       return;

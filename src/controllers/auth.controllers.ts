@@ -31,13 +31,12 @@ export const login = asyncHandler(
       password,
     );
     if (!token) next(new Error());
-    res.cookie("accessToken", token?.accessToken, {
+    res.cookie("refreshToken", token?.refreshToken, {
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      expires: new Date(Date.now() + 1000 * 60 * 60),
     });
-    res.status(200).json({ message: "success" });
+    res.status(200).json({ accessToken: token?.accessToken });
   },
 );
 export const logout = asyncHandler(async (_req: Request, res: Response) => {

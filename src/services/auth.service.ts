@@ -18,10 +18,13 @@ export async function loginUser(userNameOrEmail: string, password: string) {
   const isValid = await bcrypt.compare(password, user?.password as string);
   if (!isValid) return;
   const { id, username: userName } = user;
-  const accessToken = jwt.sign({ id, userName }, config.jwtsecret, {
-    expiresIn: "1h",
+  const accessToken = jwt.sign({ id, userName }, config.jwtSecret, {
+    expiresIn: "15m",
   });
-  return { accessToken };
+  const refreshToken = jwt.sign({ id, userName }, config.jwtSecretRefresh, {
+    expiresIn: "1d",
+  });
+  return { accessToken, refreshToken };
 }
 export async function resetPassword(
   userId: string,
