@@ -8,9 +8,9 @@ export async function newNote(noteRequest: Note) {
   });
   return note;
 }
-export async function getNotesByUserId(userId: string) {
+export async function getNotesByUserId(userId: string, deleted: boolean) {
   const notes = await dbConnection.note.findMany({
-    where: { userId, AND: { isDelete: false } },
+    where: { userId, AND: { isDelete: deleted } },
     omit: { isDelete: true, userId: true, content: true },
   });
   return notes;

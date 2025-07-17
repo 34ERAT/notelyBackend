@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import e, { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
 import { newNoteRequest, userIdRequest } from "../validations";
 import { getNotesByUserId, newNote } from "../services/note.service";
 import { Note } from "@prisma/client";
-
+// TODO: Verify userId in the verification middleware
 export const createNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const noteRequest = await newNoteRequest.parseAsync(req.body);
@@ -19,11 +19,22 @@ export const createNote = asyncHandler(
 export const allNotes = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = await userIdRequest.parseAsync(req.userId);
-    const userNotes = await getNotesByUserId(userId);
+    const userNotes = await getNotesByUserId(userId, false);
     if (!userNotes) {
       next(new Error());
       return;
     }
     res.status(200).json(userNotes);
+  },
+);
+export const deleteNotes = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = await userIdRequest.parseAsync(req.userId);
+    const trash = await getNotesByUserId(userId, true);
+    if (!trash) {
+      next(new Error());
+      return;
+    }
+    res.status(200).json(trash);
   },
 );

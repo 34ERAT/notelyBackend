@@ -1,14 +1,10 @@
 import { Router } from "express";
-import { allNotes, createNote } from "../controllers";
+import { allNotes, createNote, deleteNotes } from "../controllers";
 
 const noteRouter = Router();
-noteRouter
-  .route("/")
-  .post(createNote)
-  //TODO: GET /api/entries or GET /api/notes: get all entries/notes belonging to a user.
-  .get(allNotes);
+noteRouter.route("/").post(createNote).get(allNotes);
 //TODO: GET /api/entries/trash: get all deleted entries.
-//
+noteRouter.get("/trash", deleteNotes);
 //TODO: GET /api/entry/:id: get a specific entry
 //
 //TODO: PATCH /api/entry/:id: update a specific entry
