@@ -5,6 +5,7 @@ import {
   getNote,
   getNotesByUserId,
   newNote,
+  restoreNoteById,
   updateNote,
 } from "../services/note.service";
 import { Note } from "@prisma/client";
@@ -61,6 +62,17 @@ export const patchNote = asyncHandler(
       ...patchedNote,
     } as Note);
     if (!patchedNote) {
+      next(new Error());
+      return;
+    }
+    res.status(200).json(note);
+  },
+);
+export const restoreNote = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = await notesParams.parseAsync(req.params);
+    const note = await restoreNoteById(id, req.userId as string);
+    if (!note) {
       next(new Error());
       return;
     }

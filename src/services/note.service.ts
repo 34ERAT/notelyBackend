@@ -33,3 +33,13 @@ export async function updateNote(note: Note) {
   });
   return patchednote;
 }
+export async function restoreNoteById(id: string, userId: string) {
+  const note = await dbConnection.note.update({
+    where: {
+      id,
+      AND: { userId, isDelete: true },
+    },
+    data: { isDelete: false },
+  });
+  return note;
+}
