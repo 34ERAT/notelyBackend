@@ -32,3 +32,8 @@ export const resetPasswordRequest = z
     },
   );
 export const userIdRequest = z.uuid();
+export const newNoteRequest = z.object({
+  title: z.string(),
+  synopsis: z.string(),
+  content: z.string(),
+});
