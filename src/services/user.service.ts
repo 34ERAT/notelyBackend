@@ -8,6 +8,7 @@ export async function updateProfile(profile: User) {
       id,
     },
     data: rest,
+    omit: { password: true, id: true, isDeleted: true },
   });
   return patchedProfile;
 }

@@ -10,6 +10,7 @@ import {
   updateNote,
 } from "../services/note.service";
 import { Note } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 export const createNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const newnote = await noteRequest.parseAsync(req.body);
@@ -47,7 +48,12 @@ export const findNote = asyncHandler(
     const { id } = await notesParams.parseAsync(req.params);
     const note = await getNote(id, req.userId as string);
     if (!note) {
-      next(new Error());
+      next(
+        new PrismaClientKnownRequestError("note was not found", {
+          code: "P2001",
+          clientVersion: "N\/A",
+        }),
+      );
       return;
     }
     res.status(200).json(note);

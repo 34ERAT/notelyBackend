@@ -25,8 +25,12 @@ export default function (
           message: ` ${error.meta?.target as string} record already exist`,
         });
         break;
+      case "P2025":
+        res.status(404).json({ message: error.meta?.cause });
+        break;
       default:
         res.status(400).json({ message: "something is wrong with your data " });
+        console.error(error);
         break;
     }
     return;
