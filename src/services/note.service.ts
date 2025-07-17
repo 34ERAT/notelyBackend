@@ -43,3 +43,10 @@ export async function restoreNoteById(id: string, userId: string) {
   });
   return note;
 }
+export async function deleteNoteById(id: string, userId: string) {
+  const note = await dbConnection.note.update({
+    where: { id, AND: { userId, isDelete: false } },
+    data: { isDelete: true },
+  });
+  return note;
+}

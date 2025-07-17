@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import e, { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
 import { noteRequest, notesParams } from "../validations";
 import {
+  deleteNoteById,
   getNote,
   getNotesByUserId,
   newNote,
@@ -77,5 +78,16 @@ export const restoreNote = asyncHandler(
       return;
     }
     res.status(200).json(note);
+  },
+);
+export const deleteNote = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = await notesParams.parseAsync(req.params);
+    const note = await deleteNoteById(id, req.userId as string);
+    if (!note) {
+      next(new Error());
+      return;
+    }
+    res.status(200).json({ message: "note deleted successfully" });
   },
 );
