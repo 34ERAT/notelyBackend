@@ -8,3 +8,10 @@ export async function newNote(noteRequest: Note) {
   });
   return note;
 }
+export async function getNotesByUserId(userId: string) {
+  const notes = await dbConnection.note.findMany({
+    where: { userId, AND: { isDelete: false } },
+    omit: { isDelete: true, userId: true, content: true },
+  });
+  return notes;
+}

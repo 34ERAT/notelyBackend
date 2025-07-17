@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { verifyUser } from "../middlewares";
-import { createNote } from "../controllers";
+import { allNotes, createNote } from "../controllers";
 
 const noteRouter = Router();
-//TODO: POST /api/entries: create a new entry.
-noteRouter.route("/").post(verifyUser, createNote);
-//TODO: GET /api/entries or GET /api/notes: get all entries/notes belonging to a user.
-//
+noteRouter
+  .route("/")
+  .post(createNote)
+  //TODO: GET /api/entries or GET /api/notes: get all entries/notes belonging to a user.
+  .get(allNotes);
 //TODO: GET /api/entries/trash: get all deleted entries.
 //
 //TODO: GET /api/entry/:id: get a specific entry
