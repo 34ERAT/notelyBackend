@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
-import { newNoteRequest } from "../validations";
-import { getNotesByUserId, newNote } from "../services/note.service";
+import { newNoteRequest, notesParams } from "../validations";
+import { getNote, getNotesByUserId, newNote } from "../services/note.service";
 import { Note } from "@prisma/client";
 export const createNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -33,5 +33,16 @@ export const deleteNotes = asyncHandler(
       return;
     }
     res.status(200).json(trash);
+  },
+);
+export const findNote = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = await notesParams.parseAsync(req.params);
+    const note = await getNote(id, req.userId as string);
+    if (!note) {
+      next(new Error());
+      return;
+    }
+    res.status(200).json(note);
   },
 );

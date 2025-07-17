@@ -31,7 +31,10 @@ export const resetPasswordRequest = z
       path: ["confirmPassword"],
     },
   );
-export const userIdRequest = z.uuid();
+export const validatedId = z.uuid();
+export const notesParams = z.object({
+  id: validatedId,
+});
 export const newNoteRequest = z.object({
   title: z.string(),
   synopsis: z.string(),

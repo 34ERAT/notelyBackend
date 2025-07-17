@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import config from "../config/config";
 import asyncHandler from "../utils/asyncHandler.uitl";
-import { userIdRequest } from "../validations";
+import { validatedId } from "../validations";
 
 export const verifyUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +22,7 @@ export const verifyUser = asyncHandler(
       res.status(404).json({ message: "no token found or invalid_type" });
       return;
     }
-    req.userId = await userIdRequest.parseAsync((decode as Payload).id);
+    req.userId = await validatedId.parseAsync((decode as Payload).id);
     next();
   },
 );

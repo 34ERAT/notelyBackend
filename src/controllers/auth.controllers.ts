@@ -4,7 +4,6 @@ import {
   loginRequest,
   registerRequest,
   resetPasswordRequest,
-  userIdRequest,
 } from "../validations";
 import { createUser, loginUser, resetPassword } from "../services";
 import { User } from "@prisma/client";
