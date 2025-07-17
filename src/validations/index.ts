@@ -35,7 +35,7 @@ export const validatedId = z.uuid();
 export const notesParams = z.object({
   id: validatedId,
 });
-export const newNoteRequest = z.object({
+export const noteRequest = z.object({
   title: z.string(),
   synopsis: z.string(),
   content: z.string(),

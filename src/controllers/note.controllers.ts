@@ -1,18 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
-import { newNoteRequest, notesParams } from "../validations";
-import { getNote, getNotesByUserId, newNote } from "../services/note.service";
+import { noteRequest, notesParams } from "../validations";
+import {
+  getNote,
+  getNotesByUserId,
+  newNote,
+  updateNote,
+} from "../services/note.service";
 import { Note } from "@prisma/client";
 export const createNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const noteRequest = await newNoteRequest.parseAsync(req.body);
+    const newnote = await noteRequest.parseAsync(req.body);
     const userId = req.userId;
-    const note = await newNote({ userId, ...noteRequest } as Note);
-    if (!note) {
+    const createdNote = await newNote({ userId, ...newnote } as Note);
+    if (!createdNote) {
       next(new Error());
       return;
     }
-    res.status(201).json(note);
+    res.status(201).json(createdNote);
   },
 );
 export const allNotes = asyncHandler(
@@ -40,6 +45,22 @@ export const findNote = asyncHandler(
     const { id } = await notesParams.parseAsync(req.params);
     const note = await getNote(id, req.userId as string);
     if (!note) {
+      next(new Error());
+      return;
+    }
+    res.status(200).json(note);
+  },
+);
+export const patchNote = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = await notesParams.parseAsync(req.params);
+    const patchedNote = await noteRequest.parseAsync(req.body);
+    const note = await updateNote({
+      id,
+      userId: req.userId,
+      ...patchedNote,
+    } as Note);
+    if (!patchedNote) {
       next(new Error());
       return;
     }

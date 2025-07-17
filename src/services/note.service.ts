@@ -21,3 +21,15 @@ export async function getNote(id: string, userId: string) {
   });
   return note;
 }
+export async function updateNote(note: Note) {
+  const { userId, id, ...rest } = note;
+  const patchednote = await dbConnection.note.update({
+    where: {
+      id,
+      AND: { userId, isDelete: false },
+    },
+    data: { ...rest },
+    omit: { isDelete: true, userId: true },
+  });
+  return patchednote;
+}
