@@ -3,6 +3,7 @@ import { verify } from "jsonwebtoken";
 import config from "../config/config";
 import asyncHandler from "../utils/asyncHandler.uitl";
 import { validatedId } from "../validations";
+import { Payload } from "../types";
 
 export const verifyUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -11,12 +12,6 @@ export const verifyUser = asyncHandler(
       res.status(404).json({ message: "no token found " });
       return;
     }
-    type Payload = {
-      id: string;
-      userName: string;
-      iat: number;
-      exp: number;
-    };
     const decode = verify(accessToken, config.jwtSecret);
     if (!decode) {
       res.status(404).json({ message: "no token found or invalid_type" });

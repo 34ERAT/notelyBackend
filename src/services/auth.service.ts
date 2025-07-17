@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import dbConnection from "../utils/dbConnection";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 import config from "../config/config";
 
 export async function createUser(newUser: User) {
@@ -18,10 +18,10 @@ export async function loginUser(userNameOrEmail: string, password: string) {
   const isValid = await bcrypt.compare(password, user?.password as string);
   if (!isValid) return;
   const { id, username: userName } = user;
-  const accessToken = jwt.sign({ id, userName }, config.jwtSecret, {
+  const accessToken = sign({ id, userName }, config.jwtSecret, {
     expiresIn: "15m",
   });
-  const refreshToken = jwt.sign({ id, userName }, config.jwtSecretRefresh, {
+  const refreshToken = sign({ id, userName }, config.jwtSecretRefresh, {
     expiresIn: "1d",
   });
   return { accessToken, refreshToken };

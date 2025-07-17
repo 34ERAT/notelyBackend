@@ -7,6 +7,9 @@ import {
 } from "../validations";
 import { createUser, loginUser, resetPassword } from "../services";
 import { User } from "@prisma/client";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
+import config from "../config/config";
+import { Payload } from "../types";
 
 export const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -53,5 +56,26 @@ export const patchPassword = asyncHandler(
     const newpass = await resetPassword(userId, oldPassword, password);
     if (!newpass) next(new Error());
     res.status(200).json({ message: "password reset succefull" });
+  },
+);
+export const renewToken = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      res.status(401).json({ message: "no refresh token provided" });
+      return;
+    }
+    const { id, userName } = verify(
+      refreshToken,
+      config.jwtSecretRefresh,
+    ) as Payload;
+
+    const accessToken = sign({ id, userName }, config.jwtSecret, {
+      expiresIn: "15m",
+    });
+    if (!accessToken) {
+      next(new Error());
+    }
+    res.status(200).json({ accessToken });
   },
 );
