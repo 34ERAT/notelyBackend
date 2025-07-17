@@ -1,6 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, Response } from "express";
-import { JsonWebTokenError } from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import z, { ZodError } from "zod";
 
 export default function (
@@ -38,8 +38,12 @@ export default function (
     }
     return;
   }
-  if (Error instanceof JsonWebTokenError) {
-    res.status(409).json({ message: "invalid token or expried login again" });
+  if (error instanceof JsonWebTokenError) {
+    res.status(409).json({ message: "invalid token  login again " });
+    return;
+  }
+  if (error instanceof TokenExpiredError) {
+    res.status(409).json({ message: "expried token refersh or login again" });
     return;
   }
   console.log(error);

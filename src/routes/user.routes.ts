@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { patchProfile } from "../controllers/user.controllers";
+import { patchProfile, profile } from "../controllers/user.controllers";
 
 const userRouter = Router();
-userRouter.patch("/", patchProfile);
+userRouter.route("/").patch(patchProfile).get(profile);
 export default userRouter;

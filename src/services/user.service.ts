@@ -12,3 +12,9 @@ export async function updateProfile(profile: User) {
   });
   return patchedProfile;
 }
+export async function getProfile(userId: string) {
+  return await dbConnection.user.findUnique({
+    where: { id: userId },
+    omit: { password: true, isDeleted: true, id: true },
+  });
+}
