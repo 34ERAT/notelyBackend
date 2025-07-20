@@ -7,7 +7,7 @@ import {
 } from "../validations";
 import { createUser, loginUser, resetPassword } from "../services";
 import { User } from "@prisma/client";
-import { JwtPayload, sign, verify } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import config from "../config/config";
 import { Payload } from "../types";
 
@@ -25,7 +25,7 @@ export const register = asyncHandler(
   },
 );
 export const login = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, _next: NextFunction) => {
     const { userName, email, password } = await loginRequest.parseAsync(
       req.body,
     );
@@ -33,7 +33,10 @@ export const login = asyncHandler(
       (userName as string) || (email as string),
       password,
     );
-    if (!token) next(new Error());
+    if (!token) {
+      res.status(401).json({ message: "invalid userName or password" });
+      return;
+    }
     res.cookie("refreshToken", token?.refreshToken, {
       httpOnly: true,
       sameSite: "none",
