@@ -39,11 +39,11 @@ export default function (
     return;
   }
   if (error instanceof JsonWebTokenError) {
-    res.status(409).json({ message: "invalid token  login again " });
+    res.status(401).json({ message: "invalid token  login again " });
     return;
   }
   if (error instanceof TokenExpiredError) {
-    res.status(409).json({ message: "expried token refersh or login again" });
+    res.status(401).json({ message: "expried token refersh or login again" });
     return;
   }
   console.log(error);
