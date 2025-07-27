@@ -84,7 +84,7 @@ export const restoreNote = asyncHandler(
       next(new Error());
       return;
     }
-    res.status(200).json(note);
+    res.status(200).json({ message: " restored successfuly" });
   },
 );
 export const deleteNote = asyncHandler(
