@@ -30,7 +30,7 @@ export const login = asyncHandler(
       req.body,
     );
     const token = await loginUser(
-      (userName as string) || (email as string),
+      (userName as string).trim() || (email as string).trim(),
       password,
     );
     if (!token) {
@@ -46,7 +46,7 @@ export const login = asyncHandler(
   },
 );
 export const logout = asyncHandler(async (_req: Request, res: Response) => {
-  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
   res.json({ message: "logged out" });
 });
 

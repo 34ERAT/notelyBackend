@@ -1,7 +1,9 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { NextFunction, Request, Response } from "express";
+import { json, NextFunction, Request, Response } from "express";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import { MulterError } from "multer";
 import z, { ZodError } from "zod";
+import ca from "zod/v4/locales/ca.cjs";
 
 export default function (
   error: Error,
@@ -39,11 +41,23 @@ export default function (
     return;
   }
   if (error instanceof JsonWebTokenError) {
-    res.status(409).json({ message: "invalid token  login again " });
+    res.status(401).json({ message: "invalid token  login again " });
     return;
   }
   if (error instanceof TokenExpiredError) {
-    res.status(409).json({ message: "expried token refersh or login again" });
+    res.status(401).json({ message: "expried token refersh or login again" });
+    return;
+  }
+  if (error instanceof MulterError) {
+    switch (error.code) {
+      case "MISSING_FIELD_NAME":
+        res.status(400).json({ message: "avater field is required" });
+        break;
+      default:
+        res
+          .status(400)
+          .json({ message: "something is wrong with you request" });
+    }
     return;
   }
   console.log(error);
