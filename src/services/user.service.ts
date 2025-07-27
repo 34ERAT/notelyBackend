@@ -1,11 +1,11 @@
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import dbConnection from "../utils/dbConnection";
 
-export async function updateProfile(profile: User) {
+export async function updateProfile(profile: Prisma.UserUpdateInput) {
   const { id, ...rest } = profile;
   const patchedProfile = await dbConnection.user.update({
     where: {
-      id,
+      id: id as string,
     },
     data: rest,
     omit: { password: true, id: true, isDeleted: true },

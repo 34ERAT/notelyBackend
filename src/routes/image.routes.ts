@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { imageUpload } from "../controllers";
+import { updateAvatar } from "../controllers";
+import saveToCloudinaryMiddlewares from "../middlewares/saveToCloudinary.middlewares";
 
 const imageRouter = Router();
-imageRouter.post("/upload", imageUpload);
+imageRouter.post("/avatar", saveToCloudinaryMiddlewares, updateAvatar);
 export default imageRouter;

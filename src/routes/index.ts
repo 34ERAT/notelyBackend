@@ -11,5 +11,5 @@ const router = Router();
 router.use("/auth", authRouter);
 router.use("/notes", verifyUser, noteRouter);
 router.use("/user", verifyUser, userRouter);
-router.use("/images", verifyUser, upload.single("avater"), imageRoutes);
+router.use("/images", verifyUser, upload.single("avatar"), imageRoutes);
 export default router;

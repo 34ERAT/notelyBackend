@@ -3,6 +3,8 @@ import asyncHandler from "../utils/asyncHandler.uitl";
 import { profileRequest } from "../validations";
 import { User } from "@prisma/client";
 import { getProfile, updateProfile } from "../services/user.service";
+import { upload } from "../services";
+import z from "zod";
 
 export const patchProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -26,5 +28,18 @@ export const profile = asyncHandler(
       return;
     }
     res.status(200).json(profile);
+  },
+);
+
+export const updateAvatar = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const url = await z.url().parseAsync(req.avatar);
+    const userId = req.userId as string;
+    const { avatar } = await updateProfile({ avatar: url, id: userId });
+    if (!avatar) {
+      next(new Error(" missing avatar"));
+      return;
+    }
+    res.status(200).json({ avatar });
   },
 );
