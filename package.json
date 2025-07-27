@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon ./src/index.ts",
-    "prod": "node ./src/index.js"
+    "prod": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",

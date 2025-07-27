@@ -57,6 +57,7 @@ export default function (
         res
           .status(400)
           .json({ message: "something is wrong with you request" });
+        console.error(error);
     }
     return;
   }
