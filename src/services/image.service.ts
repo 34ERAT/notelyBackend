@@ -12,4 +12,5 @@ export async function upload(byteArrayBuffer: Buffer<ArrayBufferLike>) {
       })
       .end(byteArrayBuffer);
   });
+  return secure_url;
 }
