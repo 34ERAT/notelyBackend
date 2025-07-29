@@ -2,6 +2,7 @@ import e, { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
 import { noteRequest, notesParams } from "../validations";
 import {
+  bookMarks,
   deleteNoteById,
   getNote,
   getNotesByUserId,
@@ -96,5 +97,26 @@ export const deleteNote = asyncHandler(
       return;
     }
     res.status(200).json({ message: "note deleted successfully" });
+  },
+);
+export const allBookMarks = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const notes = await bookMarks(req.userId as string);
+    if (!notes) {
+      next(new Error("laking notes"));
+      return;
+    }
+    res.status(200).json(notes);
+  },
+);
+export const bookMarkNote = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = await notesParams.parseAsync(req.params);
+    const userId = req.userId as string;
+    const note = await updateNote({ id, userId, BookMarked: true } as Note);
+    if (!note) {
+      next(new Error("note not found or something is wrongh"));
+    }
+    res.status(200).json({ message: "note bookMarked successfully" });
   },
 );

@@ -52,3 +52,11 @@ export async function deleteNoteById(id: string, userId: string) {
   });
   return note;
 }
+
+export async function bookMarks(userId: string) {
+  const note = await dbConnection.note.findMany({
+    where: { userId, AND: { isDelete: false, BookMarked: true } },
+    omit: { isDelete: true, BookMarked: true },
+  });
+  return note;
+}

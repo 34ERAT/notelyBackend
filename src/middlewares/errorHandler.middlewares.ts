@@ -14,6 +14,7 @@ export default function (
   if (error instanceof ZodError) {
     const pretryError = z.prettifyError(error);
     res.status(400).json({ message: pretryError });
+    console.log(error);
     return;
   }
   //

@@ -29,6 +29,7 @@ model Note {
   dateCreated DateTime @default(now()) @db.Timestamptz()
   lastUpdate  DateTime @updatedAt @db.Timestamptz()
   isDelete    Boolean  @default(false) @db.Boolean
+  BookMarked  Boolean  @default(false) @db.Boolean
   User        User?    @relation(fields: [userId], references: [id])
   userId      String   @db.Uuid
 }
