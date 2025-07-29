@@ -1,4 +1,4 @@
-import e, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
 import { bookMarkToogle, noteRequest, notesParams } from "../validations";
 import {
@@ -12,16 +12,24 @@ import {
 } from "../services/note.service";
 import { Note } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { marked } from "marked";
+import { toMarkDown } from "../utils";
 export const createNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const newnote = await noteRequest.parseAsync(req.body);
     const userId = req.userId;
-    const createdNote = await newNote({ userId, ...newnote } as Note);
+    const createdNote = await newNote({
+      userId,
+      ...newnote,
+      content: toMarkDown(newnote.content),
+    } as Note);
     if (!createdNote) {
       next(new Error());
       return;
     }
-    res.status(201).json(createdNote);
+    res
+      .status(201)
+      .json({ ...createdNote, content: await marked(createdNote.content) });
   },
 );
 export const allNotes = asyncHandler(
@@ -58,13 +66,15 @@ export const findNote = asyncHandler(
       );
       return;
     }
-    res.status(200).json(note);
+    const content = await marked(note.content);
+    res.status(200).json({ ...note, content });
   },
 );
 export const patchNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = await notesParams.parseAsync(req.params);
-    const patchedNote = await noteRequest.parseAsync(req.body);
+    let patchedNote = await noteRequest.parseAsync(req.body);
+    patchedNote = { ...patchedNote, content: toMarkDown(patchedNote.content) };
     const note = await updateNote({
       id,
       userId: req.userId,
