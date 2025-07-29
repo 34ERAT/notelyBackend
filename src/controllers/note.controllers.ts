@@ -1,6 +1,6 @@
 import e, { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
-import { noteRequest, notesParams } from "../validations";
+import { bookMarkToogle, noteRequest, notesParams } from "../validations";
 import {
   bookMarks,
   deleteNoteById,
@@ -113,7 +113,8 @@ export const bookMarkNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = await notesParams.parseAsync(req.params);
     const userId = req.userId as string;
-    const note = await updateNote({ id, userId, BookMarked: true } as Note);
+    const { BookMarked } = await bookMarkToogle.parseAsync(req.body);
+    const note = await updateNote({ id, userId, BookMarked } as Note);
     if (!note) {
       next(new Error("note not found or something is wrongh"));
     }

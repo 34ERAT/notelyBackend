@@ -12,6 +12,7 @@ export async function getNotesByUserId(userId: string, deleted: boolean) {
   const notes = await dbConnection.note.findMany({
     where: { userId, AND: { isDelete: deleted } },
     omit: { isDelete: true, userId: true, content: true },
+    orderBy: { dateCreated: "asc" },
   });
   return notes;
 }
@@ -56,7 +57,8 @@ export async function deleteNoteById(id: string, userId: string) {
 export async function bookMarks(userId: string) {
   const note = await dbConnection.note.findMany({
     where: { userId, AND: { isDelete: false, BookMarked: true } },
-    omit: { isDelete: true, BookMarked: true },
+    omit: { isDelete: true, userId: true, content: true },
+    orderBy: { dateCreated: "asc" },
   });
   return note;
 }

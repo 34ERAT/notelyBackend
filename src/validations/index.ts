@@ -40,6 +40,10 @@ export const noteRequest = z.object({
   synopsis: z.string(),
   content: z.string(),
 });
+
+export const bookMarkToogle = z.object({
+  BookMarked: z.boolean(),
+});
 export const profileRequest = z.object({
   firstName: z.string(),
   lastName: z.string(),
