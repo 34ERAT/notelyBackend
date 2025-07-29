@@ -56,8 +56,11 @@ export const patchPassword = asyncHandler(
       req.body,
     );
     const userId = req.userId as string;
-    const newpass = await resetPassword(userId, oldPassword, password);
-    if (!newpass) next(new Error());
+    const newpass = await resetPassword(userId, password, oldPassword);
+    if (!newpass) {
+      next(new Error("someting is wrong with password"));
+      return;
+    }
     res.status(200).json({ message: "password reset succefull" });
   },
 );

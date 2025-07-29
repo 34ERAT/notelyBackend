@@ -49,5 +49,4 @@ export const profileRequest = z.object({
   lastName: z.string(),
   email: z.email(),
   username: z.string(),
-  avatar: z.string(),
 });
