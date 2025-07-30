@@ -9,12 +9,12 @@ export const verifyUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = req.headers["authorization"]?.split(" ")[1];
     if (!accessToken) {
-      res.status(404).json({ message: "no token found " });
+      res.status(401).json({ message: "no token found " });
       return;
     }
     const decode = verify(accessToken, config.jwtSecret);
     if (!decode) {
-      res.status(404).json({ message: "no token found or invalid_type" });
+      res.status(401).json({ message: " invalid Token " });
       return;
     }
     req.userId = await validatedId.parseAsync((decode as Payload).id);
