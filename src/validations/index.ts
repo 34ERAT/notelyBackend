@@ -50,3 +50,7 @@ export const profileRequest = z.object({
   email: z.email(),
   username: z.string(),
 });
+export const genRequest = z.object({
+  title: z.string(),
+  synopsis: z.string(),
+});

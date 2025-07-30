@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.uitl";
-import { bookMarkToogle, noteRequest, notesParams } from "../validations";
+import {
+  bookMarkToogle,
+  genRequest,
+  noteRequest,
+  notesParams,
+} from "../validations";
 import {
   bookMarks,
   deleteNoteById,
@@ -14,6 +19,7 @@ import { Note } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { marked } from "marked";
 import { toMarkDown } from "../utils";
+import { genAi } from "../services/genAi.service";
 export const createNote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const newnote = await noteRequest.parseAsync(req.body);
@@ -127,7 +133,21 @@ export const bookMarkNote = asyncHandler(
     const note = await updateNote({ id, userId, BookMarked } as Note);
     if (!note) {
       next(new Error("note not found or something is wrongh"));
+      return;
     }
     res.status(200).json({ message: "note bookMarked successfully" });
+  },
+);
+export const generate = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { title, synopsis } = await genRequest.parseAsync(req.body);
+    const content = await genAi(
+      `generate one note from the title and synopsis respectivly ${title} , ${synopsis} expand on it and more flesh`,
+    );
+    if (!content) {
+      next(new Error("no response from ai"));
+      return;
+    }
+    res.status(200).json({ content: await marked(content) });
   },
 );
