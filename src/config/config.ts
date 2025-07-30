@@ -7,6 +7,7 @@ type Config = {
   cloud_name: string;
   api_key: string;
   api_secret: string;
+  gemini_api_key: string;
 };
 const config: Config = {
   port: Number(process.env.PORT) || 3000,
@@ -16,5 +17,6 @@ const config: Config = {
   cloud_name: process.env.CLOUD_NAME as string,
   api_key: process.env.COULDINARY_API_KEY as string,
   api_secret: process.env.COULDINARY_API_SECRET as string,
+  gemini_api_key: process.env.GEMINI_API_KEY as string,
 };
 export default config;
