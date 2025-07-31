@@ -142,7 +142,12 @@ export const generate = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { title, synopsis } = await genRequest.parseAsync(req.body);
     const content = await genAi(
-      `generate one note from the title and synopsis respectivly ${title} , ${synopsis} expand on it and more flesh`,
+      `
+Based on the following information, generate a detailed and well-structured note.
+Title: ${title}
+Synopsis: ${synopsis}
+Expand on the idea presented in the synopsis, using the title as the theme. Flesh out the content with examples, explanations, and any relevant background. The note should read naturally and be informative or engaging, depending on the context.
+`,
     );
     if (!content) {
       next(new Error("no response from ai"));
